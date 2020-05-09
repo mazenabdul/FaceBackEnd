@@ -8,13 +8,12 @@ const db = knex({
 
   client: 'pg',
   connection: {
-    host : '127.0.0.1',
-    user : 'postgres',
-    password: 'Mazenabdul20',
-    database : 'smartbrain'
+    connectionString: process.env.DATABASE_URL,
+    ssl: true,
   }
+  
 });
-
+connectionString: process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 
 const app = express();
 
@@ -57,7 +56,7 @@ user: [
 
 app.get('/', (req,res) => {
 
-	res.json(database.users);
+	res.json('This is working');
 });
 
 app.post('/signin', (req,res)=> {
@@ -120,7 +119,8 @@ db.transaction(trx => {
 	
 		})
 
-	.catch(err => res.status(400).json('User already exists!'))
+	.catch(err =>
+      res.status(400).json(err))
 })
 
 app.get('/profile/:id', (req,res) => {
@@ -161,9 +161,9 @@ app.put('/image', (req,res)=>{
 
 
 
-app.listen(3001, () => {
+app.listen(process.env.PORT || 3001, () => {
 
-	console.log('Test Run for 3001');
+	console.log(`App is running on port ${process.env.PORT}`);
 });
 
 
